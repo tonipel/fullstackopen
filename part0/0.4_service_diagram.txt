@@ -1,0 +1,27 @@
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+
+note over browser
+browser redirects to /notes endpoint
+after sending the new data to server
+as POST request
+end note
+
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes
+server-->browser: HTML-code
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+server-->browser: main.css
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+server-->browser: main.js
+
+note over browser:
+after reloading the whole page, browser
+fetches JSON data from server again
+end note
+
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+server-->browser: [{ content: "HTML is easy", date: "2019-05-23" }, ...]
+
+note over browser:
+the new content contains the content sent
+with POST request in the first part
+end note

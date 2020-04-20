@@ -1,0 +1,7 @@
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+
+note over browser
+browser sent the new data to the
+server and stays on the same page
+after that
+end note

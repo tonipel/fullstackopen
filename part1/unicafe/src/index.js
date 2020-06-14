@@ -10,21 +10,46 @@ const Button = (props) => (
   </button>
 )
 
-const Display = props => {
-  if (props.tail) {
+const Display = ({props}) => {
+  if (props.text === 'positive') {
     return (
       <>
       <div>
-        {props.name} {props.value} {props.tail}
+        {props.text} {props.value} {"%"}
       </div>
       </>
     )
   }
+
   return (
     <>
     <div>
-      {props.name} {props.value}
+      {props.text} {props.value}
     </div>
+    </>
+  )
+}
+
+const Statistics = ({props}) => {
+  if (props[3].value === 0) {
+    // if all is zero
+    return (
+      <>
+      <div>
+        {"No feedback given"}
+      </div>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <Display props={props[0]} />
+      <Display props={props[1]} />
+      <Display props={props[2]} />
+      <Display props={props[3]} />
+      <Display props={props[4]} />
+      <Display props={props[5]} />
     </>
   )
 }
@@ -59,6 +84,33 @@ const App = () => {
     setPositive(good/(good+neutral+newValue)*100)
   }
 
+  const props = [
+    {
+      text: 'good',
+      value: good
+    },
+    {
+      text: 'neutral',
+      value: neutral
+    },
+    {
+      text: 'bad',
+      value: bad
+    },
+    {
+      text: 'all',
+      value: all
+    },
+    {
+      text: 'average',
+      value: average
+    },
+    {
+      text: 'positive',
+      value: positive
+    },
+  ]
+
   return (
     <>
     <Header text='give feedback'/>
@@ -68,12 +120,7 @@ const App = () => {
       <Button handleClick={() => setToBad(bad + 1)} text="bad" />
     </div>
     <Header text='statistics'/>
-    <Display value={good} name='good' />
-    <Display value={neutral} name='neutral' />
-    <Display value={bad} name='bad' />
-    <Display value={all} name='all' />
-    <Display value={average} name='average' />
-    <Display value={positive} name='positive' tail='%' />
+    <Statistics props={props} />
     </>
   )
 }

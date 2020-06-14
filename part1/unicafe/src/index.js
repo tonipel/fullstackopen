@@ -10,23 +10,29 @@ const Button = (props) => (
   </button>
 )
 
-const Display = ({props}) => {
+const Statistic = ({props}) => {
   if (props.text === 'positive') {
     return (
-      <>
-      <div>
-        {props.text} {props.value} {"%"}
-      </div>
-      </>
+      <tr>
+        <td>
+          {props.text}
+        </td>
+        <td>
+          {props.value} {"%"}
+        </td>
+      </tr>
     )
   }
 
   return (
-    <>
-    <div>
-      {props.text} {props.value}
-    </div>
-    </>
+    <tr>
+      <td>
+        {props.text}
+      </td>
+      <td>
+        {props.value}
+      </td>
+    </tr>
   )
 }
 
@@ -43,14 +49,16 @@ const Statistics = ({props}) => {
   }
 
   return (
-    <>
-      <Display props={props[0]} />
-      <Display props={props[1]} />
-      <Display props={props[2]} />
-      <Display props={props[3]} />
-      <Display props={props[4]} />
-      <Display props={props[5]} />
-    </>
+    <table>
+      <tbody>
+        <Statistic props={props[0]} />
+        <Statistic props={props[1]} />
+        <Statistic props={props[2]} />
+        <Statistic props={props[3]} />
+        <Statistic props={props[4]} />
+        <Statistic props={props[5]} />
+      </tbody>
+    </table>
   )
 }
 

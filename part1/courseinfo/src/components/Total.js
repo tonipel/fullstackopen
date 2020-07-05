@@ -1,16 +1,15 @@
 import React from 'react'
 
-const Total = ({ course }) => {
-    let sum_of_exercises = 0
-  
-    course.parts.forEach(value => {
-      sum_of_exercises += value.exercises
-    });
+const Total = ({ parts }) => {
+
+    const total = parts.reduce((s, p) => (
+        {exercises: s.exercises + p.exercises}
+    ))
   
     return (
       <p>
         <b>
-          Number of exercises {sum_of_exercises}
+          Number of exercises {total.exercises}
         </b>
       </p>
     )

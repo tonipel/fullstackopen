@@ -10,7 +10,8 @@ const App = () => {
   ]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
-  const [ newFilter, setNewFilter ] = useState('')
+  const [ filterText, setNewFilter ] = useState('')
+  const [ personsFiltered, setNewPersonsFilter ] = useState(persons)
 
   const addName = (event) => {
     event.preventDefault()
@@ -23,7 +24,9 @@ const App = () => {
       window.alert(`${personObj.name} is already added to phonebook`)
     }
     else {
-      setPersons(persons.concat(personObj))
+      const newPersons = persons.concat(personObj)
+      setPersons(newPersons)
+      setNewPersonsFilter(newPersons)
       setNewName('')
       setNewNumber('')
     }
@@ -38,7 +41,18 @@ const App = () => {
   }
 
   const handleFilterChange = (event) => {
-    setNewFilter(event.target.value)
+    const change = event.target.value
+    setNewFilter(change)
+
+    if (change === null) {
+      setNewPersonsFilter(persons)
+    }
+    else {
+      const filteredPersons = persons.filter(person =>
+        person.name.toLowerCase().startsWith(change.toLowerCase())
+      )
+      setNewPersonsFilter(filteredPersons)
+    }
   }
 
   return (
@@ -70,7 +84,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
        <ul>
-         {persons.map((person, i) =>
+         {personsFiltered.map((person, i) =>
            <Person key={i} person={person} />
          )}
        </ul>

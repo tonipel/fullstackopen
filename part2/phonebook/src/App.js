@@ -12,6 +12,7 @@ const App = () => {
   const [ filterText, setNewFilter ] = useState('')
   const [ personsFiltered, setNewPersonsFilter ] = useState([])
   const [ notificationMessage, setNotification ] = useState(null)
+  const [ notificationStyle, setNotificationStyle ] = useState()
 
   useEffect(() => {
     personService
@@ -42,7 +43,10 @@ const App = () => {
             setNewPersonsFilter(newPersons)
             setNewName('')
             setNewNumber('')
-            handleNotification(`Changed phone number for ${returnedPerson.name}`)
+            handleNotification(`Changed phone number for ${returnedPerson.name}`, 'green')
+          })
+          .catch(() => {
+            handleNotification(`Information of ${personToUpdate.name} has already been removed from server`, 'red')
           })
       }
     }
@@ -55,13 +59,14 @@ const App = () => {
           setNewPersonsFilter(newPersons)
           setNewName('')
           setNewNumber('')
-          handleNotification(`Added ${returnedPerson.name}`)
+          handleNotification(`Added ${returnedPerson.name}`, 'green')
         })
     }
   }
 
-  const handleNotification = (message) => {
+  const handleNotification = (message, color) => {
     setNotification(message)
+    setNotificationStyle(color)
     setTimeout(() => {
       setNotification(null)
     }, 3000)
@@ -113,7 +118,8 @@ const App = () => {
     <div>
       <h1>Phonebook</h1>
 
-      <Notification message={notificationMessage}/>
+      <Notification message={notificationMessage}
+                    notificationStyle={notificationStyle}/>
 
       <Filter filterText={filterText}
               handleFilterChange={handleFilterChange}/>

@@ -1,1 +1,4 @@
 # fullstackopen
+TODO:
+anecdotes
+countries

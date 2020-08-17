@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 
 const mongoose = require('mongoose')
 
@@ -18,7 +19,7 @@ const personSchema = new mongoose.Schema({
 const Person = mongoose.model('Person', personSchema)
 console.log(process.argv.length)
 if (name === undefined && number === undefined) {
-  
+
   Person.find({}).then(result => {
     console.log('phonebook:')
     result.forEach(person => {
@@ -34,7 +35,7 @@ if (name === undefined && number === undefined) {
     number: number,
   })
 
-  person.save().then(result => {
+  person.save().then(() => {
     console.log(`added ${name} number ${number} to phonebook`)
     mongoose.connection.close()
   })

@@ -61,6 +61,10 @@ const App = () => {
           setNewNumber('')
           handleNotification(`Added ${returnedPerson.name}`, 'green')
         })
+        .catch(error => {
+          console.log(error.response.data.error)
+          handleNotification(error.response.data.error, 'red')
+        })
     }
   }
 

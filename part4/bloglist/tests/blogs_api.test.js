@@ -50,6 +50,27 @@ test('unique identifier is named id', async () => {
   expect(response.body[0]).not.toHaveProperty('_id')
 })
 
+test('create new blog', async () => {
+  const blog = {
+    title: 'A good blog',
+    author: 'Matti Meikäläinen',
+    url: 'test.com',
+    likes: 99
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(blog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  const titles = response.body.map(r => r.title)
+
+  expect(response.body).toHaveLength(initialBlogs.length + 1)
+  expect(titles).toContain(blog.title)
+})
+
 
 afterAll(() => {
   mongoose.connection.close()

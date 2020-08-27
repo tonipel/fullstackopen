@@ -3,6 +3,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const blogsRouter = require('../controllers/blogs')
 
 const initialBlogs = [
   { title: 'React patterns', author: 'Michael Chan', url: 'https://reactpatterns.com/', likes: 7 },
@@ -16,18 +17,9 @@ const initialBlogs = [
 beforeEach(async () => {
   await Blog.deleteMany({})
 
-  let blogObject = new Blog(initialBlogs[0])
-  await blogObject.save()
-  blogObject = new Blog(initialBlogs[1])
-  await blogObject.save()
-  blogObject = new Blog(initialBlogs[2])
-  await blogObject.save()
-  blogObject = new Blog(initialBlogs[3])
-  await blogObject.save()
-  blogObject = new Blog(initialBlogs[4])
-  await blogObject.save()
-  blogObject = new Blog(initialBlogs[5])
-  await blogObject.save()
+  const blogs = initialBlogs.map(blog => new Blog(blog))
+  const promises = blogs.map(blog => blog.save())
+  await Promise.all(promises)
 })
 
 test('blogs are returned as json', async () => {
@@ -46,9 +38,11 @@ test('there are six blogs', async () => {
 test('unique identifier is named id', async () => {
   const response = await api.get('/api/blogs')
 
-  expect(response.body[0]).toHaveProperty('id')
-  expect(response.body[0]).not.toHaveProperty('_id')
-  expect(response.body[0].likes).toBe(7)
+  const response_blog = response.body.find(b => b.title === 'React patterns')
+
+  expect(response_blog).toHaveProperty('id')
+  expect(response_blog).not.toHaveProperty('_id')
+  expect(response_blog.likes).toBe(7)
 })
 
 test('create new blog', async () => {
@@ -131,6 +125,43 @@ test('missing title or url returns 400', async () => {
     .post('/api/blogs')
     .send(blogs[1])
     .expect(400)
+})
+
+test('delete with id', async () => {
+  let blogs = await Blog.find({})
+  const blogToDelete = blogs[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  blogs = await Blog.find({})
+  expect(blogs).toHaveLength(initialBlogs.length - 1)
+
+  const titles = blogs.map(blog => blog.title)
+  expect(titles).not.toContain(blogToDelete.title)
+
+})
+
+test('update blog', async () => {
+  let blogs = await Blog.find({})
+  let blogToUpdate = blogs.find(b => b.title === 'React patterns')
+
+  expect(blogToUpdate.likes).toBe(7)
+
+  blogToUpdate.likes = 50
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(blogToUpdate)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  blogs = await Blog.find({})
+
+  const updatedBlog = blogs.find(b => b.title === 'React patterns')
+
+  expect(updatedBlog.likes).toBe(50)
 })
 
 afterAll(() => {

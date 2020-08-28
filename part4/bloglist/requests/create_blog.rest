@@ -2,7 +2,7 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Programming blog",
+    "title": "React blog",
     "author": "Maija Mehiläinen",
     "url": "link.com",
     "likes": "123"

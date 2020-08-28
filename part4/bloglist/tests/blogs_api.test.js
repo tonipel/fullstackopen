@@ -178,6 +178,13 @@ describe('users api tests', () => {
     await user.save()
   })
 
+  test('users are returned as json', async () => {
+    await api
+      .get('/api/users')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  })
+
   test('user creation', async () => {
     const initialUsers = await User.find({})
 
@@ -250,6 +257,63 @@ describe('users api tests', () => {
 
     const users = await User.find({})
     expect(users).toHaveLength(initialUsers.length)
+  })
+})
+
+describe('login api tests', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('password', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
+  })
+
+  test('valid login', async () => {
+    const newUser = {
+      username: 'testuser',
+      name: 'Test User',
+      password: 'salasana'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+
+    const loginUser = {
+      username: 'testuser',
+      password: 'salasana'
+    }
+
+    await api
+      .post('/api/login')
+      .send(loginUser)
+      .expect(200)
+  })
+
+  test('invalid login', async () => {
+    const newUser = {
+      username: 'testuser',
+      name: 'Test User',
+      password: 'salasana'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+
+    const loginUser = {
+      username: 'testuser',
+      password: 'väärä salasana'
+    }
+
+    await api
+      .post('/api/login')
+      .send(loginUser)
+      .expect(401)
   })
 })
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -8,6 +9,19 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+  const [ notificationMessage, setNotification ] = useState(null)
+  const [ notificationStyle, setNotificationStyle ] = useState()
+
+  const handleNotification = (message, color) => {
+    setNotification(message)
+    setNotificationStyle(color)
+    setTimeout(() => {
+      setNotification(null)
+    }, 3000)
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -20,14 +34,12 @@ const App = () => {
         'loggedBlogappUser', JSON.stringify(user)
       )
 
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
-      /*setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)*/
+      handleNotification('Wrong credentials', 'red')
     }
   }
 
@@ -50,12 +62,36 @@ const App = () => {
     }
   }, [])
 
+  const addBlog = (event) => {
+    event.preventDefault()
+    const blogObject = {
+      title: title,
+      author: author,
+      url: url,
+    }
+
+    console.log(blogObject)
+
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        setTitle('')
+        setAuthor('')
+        setUrl('')
+        handleNotification(`New blog: ${returnedBlog.title} by ${returnedBlog.author} added`, 'green')
+      })
+  }
+
   const loginForm = () => (
     <div>
       <h2>
         Log in to application
       </h2>
     
+      <Notification message={notificationMessage}
+                    notificationStyle={notificationStyle}/>
+
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -81,8 +117,13 @@ const App = () => {
   )
 
   const blogForm = () => (
+    <>
     <div>
       <h2>blogs</h2>
+
+      <Notification message={notificationMessage}
+                    notificationStyle={notificationStyle}/>
+
       <div>
         {user.name} logged in
         <button type="button"
@@ -93,6 +134,40 @@ const App = () => {
         <Blog key={blog.id} blog={blog} />
       )}
     </div>
+    <div>
+    <h2>Create new blog</h2>
+      <form onSubmit={addBlog}>
+        <div>
+        title
+            <input
+              type="text"
+              value={title}
+              name="title"
+              onChange={({ target }) => setTitle(target.value)}
+          />
+        </div>
+        <div>
+          author
+            <input
+              type="text"
+              value={author}
+              name="author"
+              onChange={({ target }) => setAuthor(target.value)}
+          />
+        </div>
+        <div>
+          url
+            <input
+              type="text"
+              value={url}
+              name="url"
+              onChange={({ target }) => setUrl(target.value)}
+          />
+        </div>
+        <button type="submit">create</button>
+      </form>
+    </div>
+    </>
   )
 
   if (user === null) {

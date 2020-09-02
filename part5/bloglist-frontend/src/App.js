@@ -11,9 +11,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+
   const [notificationMessage, setNotification] = useState(null)
   const [notificationStyle, setNotificationStyle] = useState()
 
@@ -65,23 +63,12 @@ const App = () => {
     }
   }, [])
 
-  const addBlog = (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title: title,
-      author: author,
-      url: url,
-    }
-
-    console.log(blogObject)
-
+  const createBlog = (blogObject) => {
     blogService
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setTitle('')
-        setAuthor('')
-        setUrl('')
+        
         handleNotification(`New blog: ${returnedBlog.title} by ${returnedBlog.author} added`, 'green')
       })
   }
@@ -108,20 +95,7 @@ const App = () => {
         <br></br>
         <div>
           <Togglable buttonLabel="add new blog">
-            <BlogForm
-              notificationMessage={notificationMessage}
-              notificationStyle={notificationStyle}
-              handleLogout={handleLogout}
-              setTitle={setTitle}
-              setAuthor={setAuthor}
-              setUrl={setUrl}
-              addBlog={addBlog}
-              blogs={blogs}
-              user={user}
-              title={title}
-              author={author}
-              url={url}
-            />
+            <BlogForm createBlog={createBlog}/>
           </Togglable>
         </div>
       </>

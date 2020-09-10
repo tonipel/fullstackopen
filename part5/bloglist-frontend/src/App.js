@@ -90,6 +90,18 @@ const App = () => {
       })
   }
 
+  const handleDelete = (blog) => {
+    if (window.confirm(`Remove blog: ${blog.title} by ${blog.author}?`)) {
+      const blogsCopy = blogs.filter(function(obj) {
+        return obj.id !== blog.id
+      })
+
+      setBlogsByLikeCount(blogsCopy)
+      
+      blogService.deleteBlog(blog.id)
+    }
+  }
+
   const blogForm = () => {
     return (
       <>
@@ -106,7 +118,11 @@ const App = () => {
         </div>
         <br></br>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} handleUpdate={() => handleBlogUpdate(blog.id)} />
+          <Blog key={blog.id}
+                blog={blog}
+                userId={user.id}
+                handleUpdate={() => handleBlogUpdate(blog.id)}
+                handleDelete={() => handleDelete(blog)} />
         )}
         </div>
         <br></br>

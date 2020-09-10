@@ -1,10 +1,22 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, handleUpdate }) => {
+const Blog = ({ blog, userId, handleUpdate, handleDelete }) => {
   const [visible, setVisible] = useState(false)
   const [buttonName, setButtonName] = useState('view')
 
   const showWhenVisible = { display: visible ? '' : 'none' }
+
+  let blogCreatorId = ''
+  if (blog.user === undefined) {
+    blogCreatorId = ''
+  } else if (blog.user.id === undefined) {
+    blogCreatorId = blog.user
+  } else {
+    blogCreatorId = blog.user.id
+  }
+
+  const isCreatedByUser = userId === blogCreatorId
+  const showDeleteButton = { display: isCreatedByUser ? '' : 'none' }
 
   const toggleVisibility = () => {
     setVisible(!visible)
@@ -42,9 +54,11 @@ const Blog = ({ blog, handleUpdate }) => {
       <div>
         {username}
       </div>
+      <div style={showDeleteButton}>
+        <button onClick={handleDelete}>remove</button>
+      </div>
     </div>
   </div>
 )}
 
 export default Blog
-//<button onClick={event => handleDelete(person, event)}>delete</button>

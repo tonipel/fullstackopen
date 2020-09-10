@@ -49,9 +49,14 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser')
   }
 
+  const setBlogsByLikeCount = (blogs) => {
+    blogs.sort((a, b) => b.likes - a.likes)
+    setBlogs(blogs)
+  }
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogsByLikeCount( blogs )
     )  
   }, [])
 
@@ -67,7 +72,7 @@ const App = () => {
     blogService
       .create(blogObject)
       .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
+        setBlogsByLikeCount(blogs.concat(returnedBlog))
         
         handleNotification(`New blog: ${returnedBlog.title} by ${returnedBlog.author} added`, 'green')
       })
@@ -81,7 +86,7 @@ const App = () => {
       .update(blog)
       .then(returnedBlog => {
         const newBlogs = blogs.map(blog => blog.id !== returnedBlog.id ? blog : returnedBlog)
-        setBlogs(newBlogs)
+        setBlogsByLikeCount(newBlogs)
       })
   }
 

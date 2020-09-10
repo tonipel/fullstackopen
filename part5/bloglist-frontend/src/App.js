@@ -73,6 +73,18 @@ const App = () => {
       })
   }
 
+  const handleBlogUpdate = (id) => {
+    const blog = blogs.find(b => b.id === id)
+    blog.likes = blog.likes + 1
+
+    blogService
+      .update(blog)
+      .then(returnedBlog => {
+        const newBlogs = blogs.map(blog => blog.id !== returnedBlog.id ? blog : returnedBlog)
+        setBlogs(newBlogs)
+      })
+  }
+
   const blogForm = () => {
     return (
       <>
@@ -89,7 +101,7 @@ const App = () => {
         </div>
         <br></br>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} handleUpdate={() => handleBlogUpdate(blog.id)} />
         )}
         </div>
         <br></br>

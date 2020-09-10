@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-const Blog = ({ blog }) => {
+
+const Blog = ({ blog, handleUpdate }) => {
   const [visible, setVisible] = useState(false)
   const [buttonName, setButtonName] = useState('view')
 
@@ -36,7 +37,7 @@ const Blog = ({ blog }) => {
       </div>
       <div>
         {blog.likes}
-        <button>like</button>
+        <button onClick={handleUpdate}>like</button>
       </div>
       <div>
         {username}
@@ -46,3 +47,4 @@ const Blog = ({ blog }) => {
 )}
 
 export default Blog
+//<button onClick={event => handleDelete(person, event)}>delete</button>

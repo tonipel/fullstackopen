@@ -59,7 +59,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogsByLikeCount( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -76,7 +76,7 @@ const App = () => {
       .create(blogObject)
       .then(returnedBlog => {
         setBlogsByLikeCount(blogs.concat(returnedBlog))
-        
+
         handleNotification(`New blog: ${returnedBlog.title} by ${returnedBlog.author} added`, 'green')
       })
   }
@@ -100,7 +100,7 @@ const App = () => {
       })
 
       setBlogsByLikeCount(blogsCopy)
-      
+
       blogService.deleteBlog(blog.id)
     }
   }
@@ -109,24 +109,24 @@ const App = () => {
     return (
       <>
         <div>
-        <h2>blogs</h2>
+          <h2>blogs</h2>
 
-        <Notification message={notificationMessage}
-                      notificationStyle={notificationStyle}/>
+          <Notification message={notificationMessage}
+            notificationStyle={notificationStyle}/>
 
-        <div>
-          {user.name} logged in
-          <button type="button"
-                  onClick={event => handleLogout(event)}>log out</button>
-        </div>
-        <br></br>
-        {blogs.map(blog =>
-          <Blog key={blog.id}
-                blog={blog}
-                userId={user.id}
-                handleUpdate={() => handleBlogUpdate(blog.id)}
-                handleDelete={() => handleDelete(blog)} />
-        )}
+          <div>
+            {user.name} logged in
+            <button type="button"
+              onClick={event => handleLogout(event)}>log out</button>
+          </div>
+          <br></br>
+          {blogs.map(blog =>
+            <Blog key={blog.id}
+              blog={blog}
+              userId={user.id}
+              handleUpdate={() => handleBlogUpdate(blog.id)}
+              handleDelete={() => handleDelete(blog)} />
+          )}
         </div>
         <br></br>
         <div>
@@ -143,27 +143,27 @@ const App = () => {
       <h2>
         Log in to application
       </h2>
-    
+
       <Notification message={notificationMessage}
-                    notificationStyle={notificationStyle}/>
+        notificationStyle={notificationStyle}/>
 
       <form onSubmit={handleLogin}>
         <div>
           username
-            <input
-              type="text"
-              value={username}
-              name="Username"
-              onChange={({ target }) => setUsername(target.value)}
+          <input
+            type="text"
+            value={username}
+            name="Username"
+            onChange={({ target }) => setUsername(target.value)}
           />
         </div>
         <div>
           password
-            <input
-              type="password"
-              value={password}
-              name="Password"
-              onChange={({ target }) => setPassword(target.value)}
+          <input
+            type="password"
+            value={password}
+            name="Password"
+            onChange={({ target }) => setPassword(target.value)}
           />
         </div>
         <button type="submit">login</button>

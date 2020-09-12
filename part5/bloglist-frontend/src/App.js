@@ -15,6 +15,8 @@ const App = () => {
   const [notificationMessage, setNotification] = useState(null)
   const [notificationStyle, setNotificationStyle] = useState()
 
+  const blogFormRef = React.createRef()
+
   const handleNotification = (message, color) => {
     setNotification(message)
     setNotificationStyle(color)
@@ -69,6 +71,7 @@ const App = () => {
   }, [])
 
   const createBlog = (blogObject) => {
+    blogFormRef.current.toggleVisibility()
     blogService
       .create(blogObject)
       .then(returnedBlog => {
@@ -127,7 +130,7 @@ const App = () => {
         </div>
         <br></br>
         <div>
-          <Togglable buttonLabel="add new blog">
+          <Togglable buttonLabel="add new blog" ref={blogFormRef}>
             <BlogForm createBlog={createBlog}/>
           </Togglable>
         </div>

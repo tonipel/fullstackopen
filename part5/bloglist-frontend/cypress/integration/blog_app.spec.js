@@ -33,4 +33,44 @@ describe('Blog app', function() {
       cy.contains('Log in to application')
     })
   })
+
+  describe.only('When logged in', function() {
+    beforeEach(function() {
+      cy.get('#username').type('testuser')
+      cy.get('#password').type('salasana')
+      cy.get('#login-button').click()
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('add new blog').click()
+      cy.get('#title').type('test title created by cypress')
+      cy.get('#author').type('test author')
+      cy.get('#url').type('test url')
+      cy.contains('create').click()
+
+      cy.contains('test title created by cypress')
+    })
+
+    describe('Blog exists', function () {
+      beforeEach(function () {
+        cy.contains('add new blog').click()
+        cy.get('#title').type('test title created by cypress')
+        cy.get('#author').type('test author')
+        cy.get('#url').type('test url')
+        cy.get('#create').click()
+      })
+
+      it('can like a blog', function () {
+        cy.get('#view-button').click()
+        cy.get('#like-button').click()
+        cy.get('#likes').contains('1')
+      })
+
+      it('can delete a blog', function () {
+        cy.get('#view-button').click()
+        cy.get('#remove-button').click()
+        cy.get('html').should('not.contain', 'test title created by cypress')
+      })
+    })
+  })
 })

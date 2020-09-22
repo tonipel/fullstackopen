@@ -120,13 +120,15 @@ const App = () => {
               onClick={event => handleLogout(event)}>log out</button>
           </div>
           <br></br>
-          {blogs.map(blog =>
-            <Blog key={blog.id}
-              blog={blog}
-              userId={user.id}
-              handleUpdate={() => handleBlogUpdate(blog.id)}
-              handleDelete={() => handleDelete(blog)} />
-          )}
+          <div id="blogs">
+            {blogs.map(blog =>
+              <Blog key={blog.id}
+                blog={blog}
+                userId={user.id}
+                handleUpdate={() => handleBlogUpdate(blog.id)}
+                handleDelete={() => handleDelete(blog)} />
+            )}
+          </div>
         </div>
         <br></br>
         <div>

@@ -2,8 +2,10 @@ const initialState = {
   message: null
 }
 
+var timeoutId = null
+
 const timeout = ms => {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise(resolve => timeoutId = setTimeout(resolve, ms));
 }
 
 const notificationReducer = (state = initialState, action) => {
@@ -20,6 +22,10 @@ const notificationReducer = (state = initialState, action) => {
 }
 
 export const addNotification = (message, time) => {
+  if (timeoutId !== null) {
+    clearTimeout(timeoutId)
+  }
+
   return async dispatch => {
     dispatch({
       type: 'NEW_NOTIFICATION',
